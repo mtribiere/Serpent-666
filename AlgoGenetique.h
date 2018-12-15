@@ -33,3 +33,4 @@ void generationAleatoire(groupe *population);
 void reproduction(groupe *population,groupe *parents);
 void mutation (groupe *population);
 void printGene(int *num,int *op,int limit);
+void calculGene(int *num,int *op,int startIndex,int *endOfGeneIndex);

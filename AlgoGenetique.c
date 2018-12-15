@@ -55,41 +55,21 @@ void calcul(serpent *g)
 
 		//Si on trouve un opérande *
 		if(decodedOp[i] == 42){
+
 			//Calculer le resultat
-			int resultat = decodedNum[i-1]*decodedNum[i+1];
-			decodedNum[i-1] = resultat;
-
-			//Decaler toute les autres cases
-			for(int j = i+2;j<endOfGeneIndex;j++){
-				decodedNum[j-2] = decodedNum[j];
-				decodedOp[j-2]  = decodedOp[j];
-			}
-
-				//Decaler la fin du gene
-				endOfGeneIndex -= 2;
-
+			calculGene(decodedNum,decodedOp,i,&endOfGeneIndex);
 			i = 0;
+
 		}
 
 		//Si on trouve un opérande /
 		if(decodedOp[i] == 47){
+
 			//Calculer le resultat si c'est possible
 			if(decodedNum[i+1] != 0){
-
-				//Calcul du resultat
-				int resultat = decodedNum[i-1] / decodedNum[i+1];
-				decodedNum[i-1] = resultat;
-
-				//Decaler toute les autres cases
-				for(int j = i+2;j<endOfGeneIndex;j++){
-					decodedNum[j-2] = decodedNum[j];
-					decodedOp[j-2] = decodedOp[j];
-				}
-
-				//Decaler la fin du gene
-				endOfGeneIndex -= 2;
-
+				calculGene(decodedNum,decodedOp,i,&endOfGeneIndex);
 				i = 0;
+
 			}else{
 
 				g->score = MAX;
@@ -100,8 +80,6 @@ void calcul(serpent *g)
 		i++;
 	}
 
-	printf("\n");
-
 	//Traiter les additions et les soustactions s'il n'y a pas eu d'erreur
 	if(flagExit == 0){
 		i = 0;
@@ -111,38 +89,20 @@ void calcul(serpent *g)
 
 			//Si on trouve un opérande +
 			if(decodedOp[i] == 43){
+
 				//Calculer le resultat
-				int resultat = decodedNum[i-1] + decodedNum[i+1];
-				decodedNum[i-1] = resultat;
-
-				//Decaler toute les autres cases
-				for(int j = i+2;j<endOfGeneIndex;j++){
-					decodedNum[j-2] = decodedNum[j];
-					decodedOp[j-2] = decodedOp[j];
-				}
-
-				//Decaler la fin du gene
-				endOfGeneIndex -= 2;
-
+				calculGene(decodedNum,decodedOp,i,&endOfGeneIndex);
 				i = 0;
+
 			}
 
 			//Si on trouve un opérande -
 			if(decodedOp[i] == 45){
+
 				//Calculer le resultat
-				int resultat = decodedNum[i-1] - decodedNum[i+1];
-				decodedNum[i-1] = resultat;
-
-				//Decaler toute les autres cases
-				for(int j = i+2;j<endOfGeneIndex;j++){
-					decodedNum[j-2] = decodedNum[j];
-					decodedOp[j-2] = decodedOp[j];
-				}
-
-				//Decaler la fin du gene
-				endOfGeneIndex -= 2;
-
+				calculGene(decodedNum,decodedOp,i,&endOfGeneIndex);
 				i = 0;
+
 			}
 
 			//printGene(decodedNum,decodedOp,endOfGeneIndex);
@@ -156,6 +116,29 @@ void calcul(serpent *g)
 	printf("\nScore : %d\n",g->score);
 	free(decodedOp);
 	free(decodedNum);
+}
+
+void calculGene(int *num,int *op,int startIndex,int *endOfGeneIndex){
+	//Calculer le resultat avec le bon opérateur
+	int resultat = 0;
+	switch(op[startIndex]){
+		case '*' : resultat = num[startIndex-1] * num[startIndex+1]; break;
+		case '/' : resultat = num[startIndex-1] / num[startIndex+1]; break;
+		case '+' : resultat = num[startIndex-1] + num[startIndex+1]; break;
+		case '-' : resultat = num[startIndex-1] - num[startIndex+1]; break;
+	}
+
+	num[startIndex-1] = resultat;
+
+	//Decaler les autres cases
+	for(int j = startIndex+2;j<(*endOfGeneIndex);j++){
+		op[j-2] = op[j];
+		num[j-2] = num[j];
+	}
+
+
+	(*endOfGeneIndex)-=2;
+
 }
 
 /* DEBUG */
