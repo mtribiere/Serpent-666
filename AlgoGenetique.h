@@ -8,6 +8,7 @@
 
 #define MAX 2000000
 #define SEEK 666
+#define MUTATION_RATIO 1000
 
 #ifndef NBGENE
 #define NBGENE 64

@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <math.h>
+#include <time.h>
 #include "AlgoGenetique.h"
 
 
@@ -22,7 +23,7 @@ void affiche(unsigned char *gene)
 			printf("%d ",res);
 		i=i+1;
 	}
-	printf("\n");
+//	printf("\n");
 }
 
 void calcul(serpent *g)
@@ -46,7 +47,7 @@ void calcul(serpent *g)
 	//Indiquer où est le fin du tableau
 	int endOfGeneIndex = NBGENE-1;
 
-	printf("\n");
+	//printf("\n");
 
 	//Traiter les multiplication et les division
 	int i = 0;
@@ -110,10 +111,10 @@ void calcul(serpent *g)
 		}
 
 		//Attribuer le score
-		g->score = abs(666-decodedNum[0]);
+		g->score = abs(SEEK-decodedNum[0]);
 	}
 
-	printf("\nScore : %d\n",g->score);
+	//printf("\nScore : %d\n",g->score);
 	free(decodedOp);
 	free(decodedNum);
 }
@@ -182,19 +183,129 @@ serpent test[]={
 
 void selection(groupe *population,groupe *parents)
 {
+
+	//Trier les serpent (bulle)
+	for(int i = 0;i<NBPOPULATION;i++){
+		if((population->membres)[i].score >(population->membres)[i+1].score){
+			serpent temp = (population->membres)[i];
+			(population->membres)[i] = (population->membres)[i+1];
+			(population->membres)[i+1] = temp;
+			i = -1;
+		}
+	}
+
+	//Allouer de l'espace pour les parents
+	parents->membres = malloc(sizeof(serpent)*NBPARENTS);
+
+	//Prendre les meilleurs
+	for(int i = 0;i<NBPARENTS;i++)
+			(parents->membres)[i] = (population->membres)[i];
 }
 
 int evaluation(groupe *population)
 {
+	int totalMoyenne = 0;
+	int totalEcart = 0;
+	int toReturn = 1;
+	int evilIndex = -1;
+	//Pour tout les serpents
+	for(int i = 0;i<NBPOPULATION && toReturn == 1;i++){
+		//Calculer leur score
+		calcul(&((population->membres)[i]));
+
+		//Faire la moyenne
+		totalMoyenne += (population->membres)[i].score;
+
+		//Si on a un serpent maléfique
+		if((population->membres)[i].score == 0){
+			toReturn = 0;
+			evilIndex = i;
+		}
+	}
+
+	//Faire l'ecart type
+	for(int i = 0;i<NBPOPULATION;i++)
+		totalEcart += ((population->membres)[i].score - (totalMoyenne/NBPOPULATION)) * ((population->membres)[i].score - (totalMoyenne/NBPOPULATION));
+
+	printf("Moyenne de cette generation : %f | Ecart Type : %f\n",(float)(totalMoyenne/NBPOPULATION),(float)(totalEcart)/NBPOPULATION);
+
+	if(toReturn == 0){
+				printf("\n\nPar Satan un serpent maléfique !!! : ");
+				affiche((population->membres)[evilIndex].gene);
+				printf(" = %d \n",SEEK);
+	}
+	return toReturn;
 }
 
 void generationAleatoire(groupe *population)
 {
+
+	//Initialiser l'aléatoire
+	time_t t;
+	srand((unsigned) time(&t));
+
+	//Creer un espace memoire pour le groupe
+	population->membres = malloc(sizeof(serpent)*NBPOPULATION);
+
+	//Pour tout les serpent
+	for(int i = 0;i<NBPOPULATION;i++){
+			//Creer le nouvel objet à inserer
+			serpent toInsert;
+
+			//Lui donner un gene
+			for(int j = 0;j<NBGENE/2;j++){
+				(toInsert.gene)[j] = rand()%244;
+			}
+
+			//affiche(toInsert.gene);
+			////Inserer le serpent
+			(population->membres)[i] = toInsert;
+	}
 }
 
 void reproduction(groupe *population,groupe *parents)
 {
+	//Initialiser l'aléatoire
+	time_t t;
+	srand((unsigned) time(&t));
+
+	//Pour chaque serpents fils
+	for(int i = 0;i<NBPOPULATION;i++){
+		//Trouver deux parents
+		serpent firstParent = (parents->membres)[rand()%NBPARENTS];
+		serpent secondParent = (parents->membres)[rand()%NBPARENTS];
+
+		//Trouver un point de crossing-over
+		int crossingPoint = rand()%(NBGENE/2);
+
+		//Croiser les serpents
+		for(int j = 0;j<NBGENE/2;j++){
+			//Pour le parent 1
+			if(j<=crossingPoint){
+				((population->membres)[j].gene)[j] = firstParent.gene[j];
+			}else{ //Pour le parent 2
+				((population->membres)[j].gene)[j] = secondParent.gene[j];
+			}
+		}
+	}
+
 }
 void mutation (groupe *population)
 {
+	//Initialiser l'aléatoire
+	time_t t;
+	srand((unsigned) time(&t));
+
+	//Pour tout les serpents
+	for(int i = 0;i<NBPOPULATION;i++){
+			//En fonction du ration
+			if((rand()%MUTATION_RATIO+1) == 1){
+
+				//Trouver le gene a muter
+				int mutationIndex = rand() % (NBGENE/2);
+
+				//Muter
+				((population->membres)[i]).gene[mutationIndex] = rand()%244;
+			}
+	}
 }

@@ -15,10 +15,21 @@ int main(int argc, char *argv[])
 	affiche(testSnake.gene);
 	calcul(&testSnake);
 */
-
-	testCalcul();
-
 /*
+	groupe population;
+	groupe parents;
+	generationAleatoire(&population);
+
+	for(int i = 0;i<100;i++){
+		evaluation(&population);
+		selection(&population,&parents);
+		reproduction(&population,&parents);
+		mutation(&population);
+	}
+
+	//testCalcul();
+*/
+
 	int opt,nbgeneration=0;
  	groupe population,parents;
 
@@ -35,7 +46,7 @@ int main(int argc, char *argv[])
                    parents.nombre = atoi(optarg);
                    break;
                default: /* '?' */
-/*                   fprintf(stderr, "Usage: %s [-p nbpopulation] [-P nbparents] \n",argv[0]);
+                   fprintf(stderr, "Usage: %s [-p nbpopulation] [-P nbparents] \n",argv[0]);
                    exit(EXIT_FAILURE);
                }
         }
@@ -57,5 +68,5 @@ int main(int argc, char *argv[])
 	printf("Generation %d\n",nbgeneration);
 	free(population.membres);
 	free(parents.membres);
-*/
+
 }
