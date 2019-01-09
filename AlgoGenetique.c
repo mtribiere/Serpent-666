@@ -226,8 +226,8 @@ int evaluation(groupe *population)
 	//Faire l'ecart type
 	for(int i = 0;i<NBPOPULATION;i++)
 		totalEcart += ((population->membres)[i].score - (totalMoyenne/NBPOPULATION)) * ((population->membres)[i].score - (totalMoyenne/NBPOPULATION));
-
-	printf("Moyenne de cette generation : %f | Ecart Type : %f\n",(float)(totalMoyenne/NBPOPULATION),(float)(totalEcart)/NBPOPULATION);
+	double ecartType = abs(totalEcart/NBPOPULATION);
+	printf("Moyenne de cette generation : %f | Ecart Type : %f\n",(float)(totalMoyenne/NBPOPULATION),ecartType);
 
 	if(toReturn == 0){
 				printf("\n\nPar Satan un serpent maléfique !!! : ");
@@ -262,7 +262,7 @@ void generationAleatoire(groupe *population)
 			(population->membres)[i] = toInsert;
 	}
 }
-
+/*
 void reproduction(groupe *population,groupe *parents)
 {
 	//Initialiser l'aléatoire
@@ -290,6 +290,39 @@ void reproduction(groupe *population,groupe *parents)
 	}
 
 }
+*/
+
+void reproduction(groupe *population,groupe *parents)
+{
+	//Initialiser l'aléatoire
+	time_t t;
+	srand((unsigned) time(&t));
+
+	//Pour chaque serpents fils
+	for(int i = 0;i<NBPOPULATION;i+=2){
+		//Trouver deux parents
+		serpent firstParent = (parents->membres)[rand()%NBPARENTS];
+		serpent secondParent = (parents->membres)[rand()%NBPARENTS];
+
+		//Trouver un point de crossing-over
+		int crossingPoint = rand()%(NBGENE/2);
+
+		//Croiser les serpents
+		for(int j = 0;j<NBGENE/2;j++){
+			if(j<crossingPoint){
+				(population->membres)[i].gene[j] = firstParent.gene[j];
+				if(i<NBPOPULATION-1)
+					(population->membres)[i+1].gene[j] = secondParent.gene[j];
+			}else{
+				(population->membres)[i].gene[j] = secondParent.gene[j];
+				if(i<NBPOPULATION-1)
+					(population->membres)[i+1].gene[j] = firstParent.gene[j];
+			}
+		}
+	}
+}
+
+
 void mutation (groupe *population)
 {
 	//Initialiser l'aléatoire
