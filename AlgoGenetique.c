@@ -254,7 +254,7 @@ void generationAleatoire(groupe *population)
 
 			//Lui donner un gene
 			for(int j = 0;j<NBGENE/2;j++){
-				(toInsert.gene)[j] = rand()%244;
+				(toInsert.gene)[j] = rand()%244; //de 0 à 243 (F3 en hexa)
 			}
 
 			//affiche(toInsert.gene);
@@ -310,13 +310,17 @@ void reproduction(groupe *population,groupe *parents)
 		//Croiser les serpents
 		for(int j = 0;j<NBGENE/2;j++){
 			if(j<crossingPoint){
+
 				(population->membres)[i].gene[j] = firstParent.gene[j];
 				if(i<NBPOPULATION-1)
 					(population->membres)[i+1].gene[j] = secondParent.gene[j];
+
 			}else{
+
 				(population->membres)[i].gene[j] = secondParent.gene[j];
 				if(i<NBPOPULATION-1)
 					(population->membres)[i+1].gene[j] = firstParent.gene[j];
+
 			}
 		}
 	}
