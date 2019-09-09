@@ -210,6 +210,10 @@ int evaluation(groupe *population)
 	int evilIndex = -1;
 	//Pour tout les serpents
 	for(int i = 0;i<NBPOPULATION && toReturn == 1;i++){
+
+		if(i==0)
+			printf("Début calculs... ");
+
 		//Calculer leur score
 		calcul(&((population->membres)[i]));
 
@@ -262,7 +266,7 @@ void generationAleatoire(groupe *population)
 			(population->membres)[i] = toInsert;
 	}
 }
-/*
+
 void reproduction(groupe *population,groupe *parents)
 {
 	//Initialiser l'aléatoire
@@ -290,7 +294,7 @@ void reproduction(groupe *population,groupe *parents)
 	}
 
 }
-*/
+/*
 
 void reproduction(groupe *population,groupe *parents)
 {
@@ -325,7 +329,7 @@ void reproduction(groupe *population,groupe *parents)
 		}
 	}
 }
-
+*/
 
 void mutation (groupe *population)
 {
