@@ -6,6 +6,7 @@
 #include <math.h>
 #include <time.h>
 #include "AlgoGenetique.h"
+#include "Salsa_du_Demon.c"
 
 
 #define lire(gene,i)    (i%2)?(gene[i/2]&0xF):(gene[i/2]>>4);
@@ -234,7 +235,8 @@ int evaluation(groupe *population)
 	printf("Moyenne de cette generation : %f | Ecart Type : %f\n",(float)(totalMoyenne/NBPOPULATION),ecartType);
 
 	if(toReturn == 0){
-				printf("\n\nPar Satan un serpent maléfique !!! : ");
+		 		printf("\n\nPar Satan un serpent maléfique !!! : \n\n");
+				couplet_salsa_du_demon();
 				affiche((population->membres)[evilIndex].gene);
 				printf(" = %d \n",SEEK);
 	}
