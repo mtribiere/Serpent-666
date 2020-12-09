@@ -6,6 +6,7 @@
 #include <math.h>
 #include <time.h>
 #include "AlgoGenetique.h"
+#include "Salsa_du_Demon.c"
 
 
 #define lire(gene,i)    (i%2)?(gene[i/2]&0xF):(gene[i/2]>>4);
