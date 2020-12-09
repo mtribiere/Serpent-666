@@ -234,7 +234,7 @@ int evaluation(groupe *population)
 	printf("Moyenne de cette generation : %f | Ecart Type : %f\n",(float)(totalMoyenne/NBPOPULATION),ecartType);
 
 	if(toReturn == 0){
-				printf("\n\nPar Satan un serpent maléfique !!! : ");
+				couplet_salsa_du_demon();
 				affiche((population->membres)[evilIndex].gene);
 				printf(" = %d \n",SEEK);
 	}
